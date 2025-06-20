@@ -10,26 +10,44 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@300&display=swap" rel="stylesheet">
+
     <style>
         :root {
             --base-bg: #1A1C1E; --light-shadow-color: #25282B; --dark-shadow-color: #0F1113;
             --text-primary: #E0E2E5; --text-secondary: #A0A5AE; --text-tertiary: #6B7280;
             --accent-color: var(--text-primary); --neumorphic-blur: 10px; --neumorphic-distance: 5px;
-            --neumorphic-radius-big: 22px; --neumorphic-radius-iphone: 55px; --neumorphic-radius-medium: 18px;
-            --neumorphic-radius-small: 10px; --app-height: 100vh;
+            --neumorphic-radius-big: 22px; --neumorphic-radius-iphone: 55px;
+            --app-height: 100vh;
         }
+        *, *::before, *::after { box-sizing: border-box; }
         body, html { margin: 0; padding: 0; overflow: hidden; font-family: 'Source Code Pro', monospace; font-weight: 300; background-color: var(--base-bg); color: var(--text-primary); display: flex; flex-direction: column; height: 100vh; height: var(--app-height); overscroll-behavior: none; position: relative; }
         .status-overlay { position: absolute; top: 0; z-index: 100; display: flex; align-items: center; padding: 30px; pointer-events: none; }
         .status-overlay > * { pointer-events: all; }
         #status-overlay-left { left: 0; font-size: 0.8em; color: var(--text-secondary); text-shadow: 1px 1px 2px var(--dark-shadow-color); }
         #status-overlay-right { right: 0; }
-        #main-interaction-area { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; padding: 12px; padding-top: 0; gap: 12px; width: 100%; box-sizing: border-box; }
+        #main-interaction-area { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; padding: 12px; padding-top: 0; gap: 12px; width: 100%; }
         #navigator-sphere-container { flex-shrink: 0; width: 100%; max-width: 90%; margin: 30px auto 0; height: 85vw; max-height: 50vh; display: flex; justify-content: center; align-items: center; position: relative; background-color: var(--base-bg); border-radius: var(--neumorphic-radius-big); overflow: hidden; }
-        #cursor-rectangle { flex-grow: 1; flex-basis: 0; border-radius: var(--neumorphic-radius-iphone); background-color: var(--base-bg); display: flex; justify-content: center; align-items: center; text-align: center; color: var(--text-secondary); position: relative; -webkit-tap-highlight-color: transparent; touch-action: none; width: 100%; box-shadow: inset var(--neumorphic-distance) var(--neumorphic-distance) var(--neumorphic-blur) var(--dark-shadow-color), inset calc(-1 * var(--neumorphic-distance)) calc(-1 * var(--neumorphic-distance)) var(--neumorphic-blur) var(--light-shadow-color); }
-        #sphere-touch-target { width: 70vmin; height: 70vmin; max-width: 85%; max-height: 85%; background: var(--base-bg); border-radius: 50%; display: flex; justify-content: center; align-items: center; text-align: center; -webkit-tap-highlight-color: transparent; touch-action: none; cursor: grab; position: relative; color: var(--text-secondary); box-shadow: var(--neumorphic-distance) var(--neumorphic-distance) var(--neumorphic-blur) var(--dark-shadow-color), calc(-1 * var(--neumorphic-distance)) calc(-1 * var(--neumorphic-distance)) var(--neumorphic-blur) var(--light-shadow-color); transition: box-shadow 0.15s ease-out, transform 0.1s ease-out; }
+        #cursor-rectangle, #sphere-touch-target { position: relative; -webkit-tap-highlight-color: transparent; touch-action: none; }
+        #cursor-rectangle { flex-grow: 1; flex-basis: 0; border-radius: var(--neumorphic-radius-iphone); background-color: var(--base-bg); display: flex; justify-content: center; align-items: center; text-align: center; color: var(--text-secondary); width: 100%; box-shadow: inset var(--neumorphic-distance) var(--neumorphic-distance) var(--neumorphic-blur) var(--dark-shadow-color), inset calc(-1 * var(--neumorphic-distance)) calc(-1 * var(--neumorphic-distance)) var(--neumorphic-blur) var(--light-shadow-color); }
+        #sphere-touch-target { width: 70vmin; height: 70vmin; max-width: 85%; max-height: 85%; background: var(--base-bg); border-radius: 50%; display: flex; justify-content: center; align-items: center; text-align: center; cursor: grab; color: var(--text-secondary); box-shadow: var(--neumorphic-distance) var(--neumorphic-distance) var(--neumorphic-blur) var(--dark-shadow-color), calc(-1 * var(--neumorphic-distance)) calc(-1 * var(--neumorphic-distance)) var(--neumorphic-blur) var(--light-shadow-color); transition: box-shadow 0.15s ease-out, transform 0.1s ease-out; }
         #sphere-touch-target:active { box-shadow: inset var(--neumorphic-distance) var(--neumorphic-distance) var(--neumorphic-blur) var(--dark-shadow-color), inset calc(-1 * var(--neumorphic-distance)) calc(-1 * var(--neumorphic-distance)) var(--neumorphic-blur) var(--light-shadow-color); transform: scale(0.98); }
         #cursor-rectangle-text, #sphere-touch-target span { font-size: 1.0em; color: var(--text-secondary); text-shadow: 1px 1px 2px var(--dark-shadow-color), -1px -1px 2px var(--light-shadow-color); opacity: 0.9; transition: opacity 0.2s ease-out; }
-        .virtual-cursor { position: absolute; width: 24px; height: 24px; background: white; border-radius: 50%; transform: translate(-50%, -50%); pointer-events: none; display: none; z-index: 10; mix-blend-mode: difference; box-shadow: none; transition: opacity 0.2s ease-out, transform 0.1s ease-out; }
+        
+        /* --- STILE CURSORE RIPRISTINATO --- */
+        .virtual-cursor {
+            position: absolute;
+            width: 24px; height: 24px;
+            background: var(--base-bg); /* Sfondo uguale al body per l'effetto neumorph */
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            display: none;
+            z-index: 10;
+            box-shadow: inset 2px 2px 4px var(--dark-shadow-color),
+                        inset -2px -2px 4px var(--light-shadow-color);
+            transition: opacity 0.2s ease-out;
+        }
+
         .status-dot { height: 10px; width: 10px; background-color: #e74c3c; border-radius: 50%; display: inline-block; margin-left: 8px; vertical-align: middle; box-shadow: 0 0 3px #e74c3c;}
         .status-dot.connected { background-color: #2ecc71; box-shadow: 0 0 5px #2ecc71;}
         .fullscreen-btn { background: var(--base-bg); border: none; color: var(--text-secondary); width: 30px; height: 30px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; box-shadow: var(--neumorphic-distance) var(--neumorphic-distance) var(--neumorphic-blur) var(--dark-shadow-color), calc(-1 * var(--neumorphic-distance)) calc(-1 * var(--neumorphic-distance)) var(--neumorphic-blur) var(--light-shadow-color); transition: all 0.15s ease-out; }
@@ -101,11 +119,12 @@
             if (message.data.type === 'hoverFeedback' && message.data.itemId) triggerHapticFeedback(5);
         });
 
+        // --- FUNZIONI DI UTILITÀ ---
         function triggerHapticFeedback(d=5) { if (navigator.vibrate) navigator.vibrate(d); }
         function getCentroid(touchesMap) { let sx=0,sy=0,c=0; for(const t of touchesMap.values()){sx+=t.clientX;sy+=t.clientY;c++;} return(c>0)?{x:sx/c,y:sy/c}:{x:0,y:0};}
         function calculateDistance(p1,p2) {return Math.sqrt(Math.pow(p2.clientX-p1.clientX,2)+Math.pow(p2.clientY-p1.clientY,2));}
         function clampToCircle(x,y,el) { const r=el.getBoundingClientRect(), cX=r.width/2,cY=r.height/2,rd=r.width/2,dX=x-cX,dY=y-cY,d=Math.sqrt(dX*dX+dY*dY); if(d>rd){const a=Math.atan2(dY,dX);return {x:cX+rd*Math.cos(a),y:cY+rd*Math.sin(a)};} return {x,y};}
-
+        
         // --- GESTIONE EVENTI PAD CURSORE ---
         if(cursorRectangle){
             cursorRectangle.addEventListener('pointerdown', (e) => {
@@ -115,6 +134,7 @@
                 pointerDownTime_cursorPad = Date.now();
                 pointerDownPosition_cursorPad = { x: e.clientX, y: e.clientY };
                 isDraggingForCursor_cursorPad = false;
+                cursorRectangle.appendChild(virtualCursor1);
                 virtualCursor1.style.display = 'block';
                 if(cursorRectangleText) cursorRectangleText.style.opacity = '0';
                 const rect = cursorRectangle.getBoundingClientRect();
@@ -123,43 +143,42 @@
             cursorRectangle.addEventListener('pointermove', (e) => {
                 if (!activeTouches_cursorPad.has(e.pointerId)) return;
                 e.preventDefault();
-                activeTouches_cursorPad.set(e.pointerId, { clientX: e.clientX, clientY: e.clientY });
-                if (activeTouches_cursorPad.size === 1) {
-                    if (Math.sqrt(Math.pow(e.clientX-pointerDownPosition_cursorPad.x,2)+Math.pow(e.clientY-pointerDownPosition_cursorPad.y,2)) > TAP_MOVE_THRESHOLD_cursorPad/3) isDraggingForCursor_cursorPad = true;
-                    const rect = cursorRectangle.getBoundingClientRect();
-                    const normX = Math.max(0,Math.min(1,(e.clientX-rect.left)/rect.width));
-                    const normY = Math.max(0,Math.min(1,(e.clientY-rect.top)/rect.height));
-                    virtualCursor1.style.left = `${normX * rect.width}px`;
-                    virtualCursor1.style.top = `${normY * rect.height}px`;
-                    sendToSocket({ type: 'pointermove', x: normX, y: normY });
-                }
+                const rect = cursorRectangle.getBoundingClientRect();
+                const normX = Math.max(0,Math.min(1,(e.clientX-rect.left)/rect.width));
+                const normY = Math.max(0,Math.min(1,(e.clientY-rect.top)/rect.height));
+                virtualCursor1.style.left = `${normX * rect.width}px`;
+                virtualCursor1.style.top = `${normY * rect.height}px`;
+                if (Math.sqrt(Math.pow(e.clientX-pointerDownPosition_cursorPad.x,2)+Math.pow(e.clientY-pointerDownPosition_cursorPad.y,2)) > TAP_MOVE_THRESHOLD_cursorPad) isDraggingForCursor_cursorPad = true;
+                sendToSocket({ type: 'pointermove', x: normX, y: normY });
             });
             const handleCursorUp = (e) => {
                 if (!activeTouches_cursorPad.has(e.pointerId)) return;
                 e.preventDefault();
+                // --- LOGICA CLICK vs POINTERUP CORRETTA ---
+                if (!isDraggingForCursor_cursorPad && (Date.now() - pointerDownTime_cursorPad < TAP_TIME_THRESHOLD_cursorPad)) {
+                    triggerHapticFeedback(20); 
+                    sendToSocket({ type: 'click' });
+                }
+                sendToSocket({ type: 'pointerup' });
+                
                 activeTouches_cursorPad.delete(e.pointerId);
                 try { cursorRectangle.releasePointerCapture(e.pointerId); } catch(err) {}
-                if (activeTouches_cursorPad.size === 0) {
-                    virtualCursor1.style.display = 'none';
-                    if(cursorRectangleText) cursorRectangleText.style.opacity = '0.9';
-                    if (!isDraggingForCursor_cursorPad && (Date.now() - pointerDownTime_cursorPad < TAP_TIME_THRESHOLD_cursorPad)) {
-                        triggerHapticFeedback(20); sendToSocket({ type: 'click' });
-                    }
-                    sendToSocket({ type: 'pointerup' });
-                    isDraggingForCursor_cursorPad = false;
-                }
+                virtualCursor1.style.display = 'none';
+                if(cursorRectangleText) cursorRectangleText.style.opacity = '0.9';
+                isDraggingForCursor_cursorPad = false;
             };
             cursorRectangle.addEventListener('pointerup', handleCursorUp);
             cursorRectangle.addEventListener('pointercancel', handleCursorUp);
         }
 
-        // --- GESTIONE EVENTI PAD 3D ---
+        // --- GESTIONE EVENTI PAD 3D (SFERA) ---
         if(sphereTouchTarget) {
             sphereTouchTarget.addEventListener('pointerdown', (e) => {
                 triggerHapticFeedback(); e.preventDefault();
                 sphereTouchTarget.setPointerCapture(e.pointerId);
                 nav_activeTouches.set(e.pointerId, { id: e.pointerId, clientX: e.clientX, clientY: e.clientY });
-                nav_pointerDownTime_sphere = Date.now(); nav_pointerDownStartPos_sphere = {x:e.clientX, y:e.clientY};
+                nav_pointerDownTime_sphere = Date.now();
+                nav_pointerDownStartPos_sphere = {x:e.clientX, y:e.clientY};
                 if(sphereTouchTargetText) sphereTouchTargetText.style.opacity = '0';
                 if(nav_activeTouches.size === 1) {
                     nav_isOrbiting = true; nav_isMultiTouching = false; nav_lastOrbitPos = {x:e.clientX, y:e.clientY};
@@ -178,6 +197,7 @@
                 const rect = sphereTouchTarget.getBoundingClientRect();
                 if(nav_activeTouches.size === 1 && nav_isOrbiting){
                     const pos = clampToCircle(e.clientX-rect.left, e.clientY-rect.top, sphereTouchTarget);
+                    sphereTouchTarget.appendChild(virtualCursor1);
                     virtualCursor1.style.display='block'; virtualCursor1.style.left=`${pos.x}px`; virtualCursor1.style.top=`${pos.y}px`;
                     const dx=e.clientX-nav_lastOrbitPos.x, dy=e.clientY-nav_lastOrbitPos.y;
                     if(Math.abs(dx)>0.1 || Math.abs(dy)>0.1){
@@ -187,6 +207,7 @@
                 } else if(nav_activeTouches.size >= 2 && nav_isMultiTouching){
                     const t1=nav_activeTouches.get(nav_touch1_navPad.id), t2=nav_activeTouches.get(nav_touch2_navPad.id);
                     if(!t1 || !t2) return;
+                    sphereTouchTarget.appendChild(virtualCursor1); sphereTouchTarget.appendChild(virtualCursor2);
                     virtualCursor1.style.display='block'; virtualCursor2.style.display='block';
                     const p1=clampToCircle(t1.clientX-rect.left,t1.clientY-rect.top,sphereTouchTarget); virtualCursor1.style.left=`${p1.x}px`; virtualCursor1.style.top=`${p1.y}px`;
                     const p2=clampToCircle(t2.clientX-rect.left,t2.clientY-rect.top,sphereTouchTarget); virtualCursor2.style.left=`${p2.x}px`; virtualCursor2.style.top=`${p2.y}px`;
@@ -210,8 +231,8 @@
                 try { sphereTouchTarget.releasePointerCapture(e.pointerId); } catch(err){}
                 virtualCursor1.style.display='none'; virtualCursor2.style.display='none';
                 if(sphereTouchTargetText) sphereTouchTargetText.style.opacity='0.9';
-                if(nav_activeTouches.size<2) nav_isMultiTouching=false;
-                if(nav_activeTouches.size<1) nav_isOrbiting=false;
+                if(nav_activeTouches.size < 2) nav_isMultiTouching=false;
+                if(nav_activeTouches.size < 1) nav_isOrbiting=false;
             };
             sphereTouchTarget.addEventListener('pointerup', handleNavEnd);
             sphereTouchTarget.addEventListener('pointercancel', handleNavEnd);
@@ -230,7 +251,7 @@
         const setAppHeight = () => document.documentElement.style.setProperty('--app-height', `${window.innerHeight}px`);
         window.addEventListener('resize', setAppHeight); window.addEventListener('orientationchange', setAppHeight);
         setAppHeight();
-        if (/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream) {
+        if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
             if(fullscreenButton) fullscreenButton.style.display = 'none';
         }
         document.addEventListener('touchmove', (e) => e.preventDefault(), { passive: false });
