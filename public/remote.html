@@ -352,6 +352,17 @@ const WS_URL = `wss://${WS_HOST}/?type=phone`;
         // Prevent scrolling & context menu
         document.addEventListener('touchmove', function(event) { event.preventDefault(); }, { passive: false });
         window.addEventListener('contextmenu', function(e) { e.preventDefault(); });
+
+        // --- AGGIUNTA: Funzione per tenere sveglio il server ---
+setInterval(() => {
+  // Controlla se il socket è connesso
+  if (socket && socket.readyState === WebSocket.OPEN) {
+    // Invia un messaggio di tipo 'ping'. Il nostro server non farà nulla con questo
+    // messaggio, ma il solo fatto di riceverlo resetta il timer di inattività di Render.
+    sendToSocket({ type: 'ping' });
+    console.log('Ping inviato per mantenere il server attivo.');
+  }
+}, 10 * 60 * 1000); // Esegui ogni 10 minuti
     </script>
 </body>
 </html>
