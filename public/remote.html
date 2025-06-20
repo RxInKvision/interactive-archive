@@ -14,123 +14,61 @@
 
     <style>
         :root {
-            /* Palette ancora più scura */
             --base-bg: #1A1C1E;
             --light-shadow-color: #25282B;
             --dark-shadow-color: #0F1113;
             --text-primary: #E0E2E5;
             --text-secondary: #A0A5AE;
             --text-tertiary: #6B7280;
-            --accent-color: var(--text-primary); 
-
+            --accent-color: var(--text-primary);
             --neumorphic-blur: 10px;
             --neumorphic-distance: 5px;
             --neumorphic-radius-big: 22px;
-            --neumorphic-radius-iphone: 55px; 
+            --neumorphic-radius-iphone: 55px;
             --neumorphic-radius-medium: 18px;
             --neumorphic-radius-small: 10px;
-            
             --app-height: 100vh;
         }
-
         body, html {
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
+            margin: 0; padding: 0; overflow: hidden;
             font-family: 'Source Code Pro', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            font-weight: 300;
-            background-color: var(--base-bg);
-            color: var(--text-primary);
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-            height: var(--app-height);
-            overscroll-behavior: none;
-            position: relative; 
+            font-weight: 300; background-color: var(--base-bg); color: var(--text-primary);
+            display: flex; flex-direction: column; height: 100vh; height: var(--app-height);
+            overscroll-behavior: none; position: relative;
         }
-        
         .status-overlay {
-            position: absolute;
-            top: 0;
-            z-index: 100;
-            display: flex;
-            align-items: center;
-            padding: 30px; 
-            pointer-events: none;
+            position: absolute; top: 0; z-index: 100; display: flex;
+            align-items: center; padding: 30px; pointer-events: none;
         }
-        .status-overlay > * {
-            pointer-events: all;
-        }
+        .status-overlay > * { pointer-events: all; }
         #status-overlay-left {
-            left: 0;
-            font-size: 0.8em; 
-            color: var(--text-secondary);
+            left: 0; font-size: 0.8em; color: var(--text-secondary);
             text-shadow: 1px 1px 2px var(--dark-shadow-color);
         }
-        #status-overlay-right {
-            right: 0;
-        }
-
+        #status-overlay-right { right: 0; }
         #main-interaction-area {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            padding: 12px;
-            padding-top: 0;
-            gap: 12px;
-            width: 100%;
-            box-sizing: border-box; 
+            flex-grow: 1; display: flex; flex-direction: column;
+            overflow: hidden; padding: 12px; padding-top: 0; gap: 12px;
+            width: 100%; box-sizing: border-box;
         }
-        
         #navigator-sphere-container {
-            flex-shrink: 0;
-            width: 100%;
-            max-width: 90%;
-            margin-left: auto;
-            margin-right: auto;
-            height: 85vw;
-            max-height: 50vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            background-color: var(--base-bg);
-            border-radius: var(--neumorphic-radius-big);
-            overflow: hidden;
-            margin-top: 30px;
+            flex-shrink: 0; width: 100%; max-width: 90%; margin-left: auto; margin-right: auto;
+            height: 85vw; max-height: 50vh; display: flex; justify-content: center; align-items: center;
+            position: relative; background-color: var(--base-bg); border-radius: var(--neumorphic-radius-big);
+            overflow: hidden; margin-top: 30px;
         }
         #cursor-rectangle {
-            flex-grow: 1;
-            flex-basis: 0;
-            border-radius: var(--neumorphic-radius-iphone);
-            background-color: var(--base-bg);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            color: var(--text-secondary);
-            position: relative;
-            -webkit-tap-highlight-color: transparent;
-            touch-action: none;
-            width: 100%;
+            flex-grow: 1; flex-basis: 0; border-radius: var(--neumorphic-radius-iphone); background-color: var(--base-bg);
+            display: flex; justify-content: center; align-items: center; text-align: center;
+            color: var(--text-secondary); position: relative; -webkit-tap-highlight-color: transparent;
+            touch-action: none; width: 100%;
             box-shadow: inset var(--neumorphic-distance) var(--neumorphic-distance) var(--neumorphic-blur) var(--dark-shadow-color),
                         inset calc(-1 * var(--neumorphic-distance)) calc(-1 * var(--neumorphic-distance)) var(--neumorphic-blur) var(--light-shadow-color);
         }
-
         #sphere-touch-target {
-            width: 70vmin; height: 70vmin;
-            max-width: 85%; max-height: 85%;
-            background: var(--base-bg);
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            -webkit-tap-highlight-color: transparent;
-            touch-action: none;
-            cursor: grab;
-            position: relative;
+            width: 70vmin; height: 70vmin; max-width: 85%; max-height: 85%; background: var(--base-bg);
+            border-radius: 50%; display: flex; justify-content: center; align-items: center; text-align: center;
+            -webkit-tap-highlight-color: transparent; touch-action: none; cursor: grab; position: relative;
             color: var(--text-secondary);
             box-shadow: var(--neumorphic-distance) var(--neumorphic-distance) var(--neumorphic-blur) var(--dark-shadow-color),
                         calc(-1 * var(--neumorphic-distance)) calc(-1 * var(--neumorphic-distance)) var(--neumorphic-blur) var(--light-shadow-color);
@@ -141,33 +79,19 @@
                          inset calc(-1 * var(--neumorphic-distance)) calc(-1 * var(--neumorphic-distance)) var(--neumorphic-blur) var(--light-shadow-color);
             transform: scale(0.98);
         }
-        
         #cursor-rectangle-text, #sphere-touch-target span {
-            font-size: 1.0em; 
-            color: var(--text-secondary);
-            text-shadow: 1px 1px 2px var(--dark-shadow-color), 
-                         -1px -1px 2px var(--light-shadow-color);
-            opacity: 0.9;
-            transition: opacity 0.2s ease-out;
+            font-size: 1.0em; color: var(--text-secondary);
+            text-shadow: 1px 1px 2px var(--dark-shadow-color), -1px -1px 2px var(--light-shadow-color);
+            opacity: 0.9; transition: opacity 0.2s ease-out;
         }
-
         .virtual-cursor {
-            position: absolute;
-            width: 70px; height: 70px;
-            background: transparent;
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            pointer-events: none;
-            display: none;
-            z-index: 10;
-            box-shadow: inset calc(var(--neumorphic-distance) / 2) calc(var(--neumorphic-distance) / 2) calc(var(--neumorphic-blur) / 2) var(--dark-shadow-color),
-                        inset calc(-1 * var(--neumorphic-distance)) calc(-1 * var(--neumorphic-distance)) calc(var(--neumorphic-blur) / 2) var(--light-shadow-color);
-            transition: opacity 0.s ease-out;
+            position: absolute; width: 24px; height: 24px; background: white; border-radius: 50%;
+            transform: translate(-50%, -50%); pointer-events: none; display: none; z-index: 10;
+            mix-blend-mode: difference; box-shadow: none;
+            transition: opacity 0.2s ease-out, transform 0.1s ease-out;
         }
-
         .status-dot { height: 10px; width: 10px; background-color: #e74c3c; border-radius: 50%; display: inline-block; margin-left: 8px; vertical-align: middle; box-shadow: 0 0 3px #e74c3c;}
         .status-dot.connected { background-color: #2ecc71; box-shadow: 0 0 5px #2ecc71;}
-        
         .fullscreen-btn {
             background: var(--base-bg); border: none; color: var(--text-secondary);
             width: 30px; height: 30px; border-radius: 50%; cursor: pointer;
@@ -176,15 +100,12 @@
                         calc(-1 * var(--neumorphic-distance)) calc(-1 * var(--neumorphic-distance)) var(--neumorphic-blur) var(--light-shadow-color);
             transition: all 0.15s ease-out;
         }
-        .fullscreen-btn:hover {
-            color: var(--accent-color);
-        }
+        .fullscreen-btn:hover { color: var(--accent-color); }
         .fullscreen-btn:active {
             box-shadow: inset var(--neumorphic-distance) var(--neumorphic-distance) var(--neumorphic-blur) var(--dark-shadow-color),
                         inset calc(-1 * var(--neumorphic-distance)) calc(-1 * var(--neumorphic-distance)) var(--neumorphic-blur) var(--light-shadow-color);
             transform: scale(0.95);
         }
-
     </style>
 </head>
 <body>
@@ -208,8 +129,24 @@
     <div id="virtual-cursor-1" class="virtual-cursor"></div>
     <div id="virtual-cursor-2" class="virtual-cursor"></div>
 
+    <script src="https://cdn.ably.com/lib/ably.min-1.js"></script>
     <script>
-        // DOM Elements
+        // --- INIZIO NUOVA SEZIONE ABLY ---
+        const ABLY_API_KEY = '3GJyQg.xnTqzg:tt71NuL5l13occebb9fmAZa_rywbbwtklbpkjEFETQA';
+
+        const ably = new Ably.Realtime({ key: ABLY_API_KEY });
+        const channel = ably.channels.get('remote-control-channel'); // Nome del canale di comunicazione
+
+        // Funzione per inviare dati al visore tramite Ably
+        function sendToSocket(payload) {
+            if (channel) {
+                channel.publish('control-message', payload);
+            }
+        }
+        // --- FINE NUOVA SEZIONE ABLY ---
+
+
+        // Il resto del codice rimane quasi identico, usa la nuova funzione `sendToSocket`
         const cursorRectangle = document.getElementById('cursor-rectangle');
         const cursorRectangleText = document.getElementById('cursor-rectangle-text');
         const virtualCursor1 = document.getElementById('virtual-cursor-1');
@@ -220,74 +157,55 @@
         const statusIndicator = document.getElementById('status-indicator');
         const fullscreenButton = document.getElementById('fullscreen-toggle');
 
-        // --- Funzione per Feedback Aptico ---
-        function triggerHapticFeedback(duration = 5) { // 5ms è un tocco breve e secco
+        channel.on('attached', () => {
+            statusText.textContent = 'Connected';
+            statusIndicator.classList.add('connected');
+            console.log("Connesso al canale Ably come controller.");
+        });
+        
+        channel.on('failed', () => {
+            statusText.textContent = 'Connection Failed';
+            statusIndicator.classList.remove('connected');
+        });
+
+        channel.subscribe('feedback-message', (message) => {
+            console.log("Feedback ricevuto:", message.data);
+            if(message.data.type === 'hoverFeedback' && message.data.itemId) {
+                triggerHapticFeedback(5);
+            }
+        });
+
+        function triggerHapticFeedback(duration = 5) {
             if (navigator.vibrate) {
-                try {
-                    navigator.vibrate(duration);
-                } catch (e) {
-                    console.log("Haptic feedback failed.", e);
-                }
+                try { navigator.vibrate(duration); } catch (e) { console.log("Haptic feedback failed.", e); }
             }
         }
-
-        // WebSocket & State
-        let socket = null; let retryTimeoutId = null; let attemptCount = 0;
-        // File: public/remote.html (nella sezione <script>)
-
-// ...
-// --- INIZIO BLOCCO MODIFICATO ---
-
-// Questo sarà l'indirizzo pubblico del tuo server su Render.com
-// Lo sostituirai con l'URL reale solo quando Render ti avrà dato l'indirizzo.
-const WS_HOST = 'forum-remote-control.onrender.com'; 
-
-// Usiamo wss:// per la connessione sicura (obbligatoria online)
-// e aggiungiamo il parametro per dire al server che questo client è un telefono.
-const WS_URL = `wss://${WS_HOST}/?type=phone`;
-
-// La variabile WS_PORT non è più necessaria perché le porte standard (443) sono usate da wss://
-// --- FINE BLOCCO MODIFICATO ---
-// ...
-        const WS_PORT = 8080;
-       
-        let commandQueue = [];
+        
         const availableLayouts = ["GRID", "RANDOM_3D", "SPHERE_SURFACE", "TUBE"];
         let currentLayoutSphereIndex = 0;
-
-        // Input Handling Variables
+        
         const activeTouches_cursorPad = new Map(); 
         let pointerDownTime_cursorPad = 0, pointerDownPosition_cursorPad = { x: 0, y: 0 }, isDraggingForCursor_cursorPad = false;
         const TAP_MOVE_THRESHOLD_cursorPad = 10, TAP_TIME_THRESHOLD_cursorPad = 300; 
-        let latestMoveData_cursorPad = null, lastMoveSentTime_cursorPad = 0; 
-        const MOVE_THROTTLE_INTERVAL_cursorPad = 40; 
-        let wasMultiTouching_cursorPad = false, lastPanCentroid_cursorPad = null, lastGestureSentTime_cursorPad = 0; 
-        const GESTURE_THROTTLE_INTERVAL_cursorPad = 40, PAN_SENSITIVITY_THRESHOLD_cursorPad = 1.5; 
+        
         const nav_activeTouches = new Map();
         let nav_pointerDownOnPad = false, nav_isOrbiting = false, nav_lastOrbitPos = { x: 0, y: 0 }, nav_isMultiTouching = false;
         let nav_touch1_navPad = null, nav_touch2_navPad = null, nav_lastPinchDist = 0, nav_lastCentroid_navPad = { x: 0, y: 0 };
-        let nav_lastGestureSentTime = 0; 
-        const NAV_GESTURE_THROTTLE = 40, NAV_ORBIT_SENSITIVITY_RAW = 2, NAV_DOLLY_SENSITIVITY_RAW = 0.005; 
-        const NAV_PAN_SENSITIVITY_PIXELS = 1.0, NAV_ZOOM_SENSITIVITY_PIXELS = 0.15;
+        const NAV_ORBIT_SENSITIVITY_RAW = 1.5, NAV_DOLLY_SENSITIVITY_RAW = 0.004; 
+        const NAV_PAN_SENSITIVITY_PIXELS = 0.8, NAV_ZOOM_SENSITIVITY_PIXELS = 0.1;
         const NAV_SPHERE_TAP_TIME_THRESHOLD = 250, NAV_SPHERE_TAP_MOVE_THRESHOLD = 15;
         let nav_pointerDownTime_sphere = 0, nav_pointerDownStartPos_sphere = { x: 0, y: 0 };
-
-        // --- Utility Functions ---
-        function sendToSocket(payload) { if(!payload){console.warn("Attempted to send null payload");return;} if(socket && socket.readyState === WebSocket.OPEN){socket.send(JSON.stringify(payload));}else{commandQueue.push(payload); console.log(`WS not open. Queued: ${payload.type}`);}}
-        function processCommandQueue() { if(socket && socket.readyState === WebSocket.OPEN && commandQueue.length > 0){let sent=0;const q=[...commandQueue];commandQueue=[];for(const cmd of q){if(socket && socket.readyState===WebSocket.OPEN){socket.send(JSON.stringify(cmd));sent++;}else{commandQueue=[cmd,...q.slice(sent+1),...commandQueue];break;}}}}
+        
         function getCentroid(touchesMap) { let sx=0,sy=0,c=0;for(const t of touchesMap.values()){sx+=t.clientX;sy+=t.clientY;c++;} return(c>0)?{x:sx/c,y:sy/c}:{x:0,y:0};}
         function calculateDistance(p1,p2){if(!p1||!p2||typeof p1.clientX !=='number'||typeof p1.clientY !=='number'||typeof p2.clientX !=='number'||typeof p2.clientY !=='number'){return 0;}return Math.sqrt(Math.pow(p2.clientX-p1.clientX,2)+Math.pow(p2.clientY-p1.clientY,2));}
-        
         function clampToCircle(x, y, circleElement) {
             const rect = circleElement.getBoundingClientRect();
             const centerX = rect.width / 2;
             const centerY = rect.height / 2;
             const radius = rect.width / 2;
-            
             const dx = x - centerX;
             const dy = y - centerY;
             const distance = Math.sqrt(dx * dx + dy * dy);
-
             if (distance > radius) {
                 const angle = Math.atan2(dy, dx);
                 return {
@@ -298,71 +216,209 @@ const WS_URL = `wss://${WS_HOST}/?type=phone`;
             return { x, y };
         }
 
-        // --- Fullscreen API Handler ---
-        function toggleFullScreen() { if (!document.fullscreenElement && !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement) { if (document.documentElement.requestFullscreen) { document.documentElement.requestFullscreen(); } else if (document.documentElement.mozRequestFullScreen) { document.documentElement.mozRequestFullScreen(); } else if (document.documentElement.webkitRequestFullscreen) { document.documentElement.webkitRequestFullscreen(); } else if (document.documentElement.msRequestFullscreen) { document.documentElement.msRequestFullscreen(); } if(fullscreenButton) fullscreenButton.textContent = '▣'; } else { if (document.exitFullscreen) { document.exitFullscreen(); } else if (document.mozCancelFullScreen) { document.mozCancelFullScreen(); } else if (document.webkitExitFullscreen) { document.webkitExitFullscreen(); } else if (document.msExitFullscreen) { document.msExitFullscreen(); } if(fullscreenButton) fullscreenButton.textContent = '⛶'; } }
-        if (fullscreenButton) { 
-            fullscreenButton.addEventListener('click', toggleFullScreen);
-            fullscreenButton.addEventListener('pointerdown', () => triggerHapticFeedback(10)); // Feedback aptico
-        }
-        document.addEventListener('fullscreenchange', () => { if(fullscreenButton) { fullscreenButton.textContent = document.fullscreenElement ? '▣' : '⛶';}});
-        document.addEventListener('webkitfullscreenchange', () => { if(fullscreenButton) {fullscreenButton.textContent = document.webkitIsFullScreen ? '▣' : '⛶';}});
-        document.addEventListener('mozfullscreenchange', () => { if(fullscreenButton) {fullscreenButton.textContent = document.mozFullScreen ? '▣' : '⛶';}});
-        document.addEventListener('MSFullscreenChange', () => { if(fullscreenButton) {fullscreenButton.textContent = document.msFullscreenElement ? '▣' : '⛶';}});
-
-        // --- WebSocket Connection ---
-        function connect() { try { if (socket && (socket.readyState === WebSocket.OPEN || socket.readyState === WebSocket.CONNECTING)) return; attemptCount++; if (statusText) statusText.textContent = `Connecting...`; if (statusIndicator) statusIndicator.classList.remove('connected'); socket = new WebSocket(WS_URL); socket.onopen = () => { console.log('Connect: WebSocket OPENED!'); if (statusText) statusText.textContent = 'Connected'; if (statusIndicator) statusIndicator.classList.add('connected'); attemptCount = 0; if (retryTimeoutId) { clearTimeout(retryTimeoutId); retryTimeoutId = null; } sendToSocket({type: "phoneConnected", id: "PhoneRemote_" + Date.now()}); processCommandQueue(); }; socket.onmessage = (event) => { try { const msg = JSON.parse(event.data); } catch (e) { console.warn(`Non-JSON msg: ${event.data.substring(0,100)}. Error: ${e.message}`); } }; socket.onerror = (error) => { console.error(`Connect: WebSocket ERROR`, error);}; socket.onclose = (event) => { console.log(`Connect: WebSocket CLOSED`); socket = null; if(statusText) statusText.textContent = 'Disconnected'; if(statusIndicator) statusIndicator.classList.remove('connected'); if (retryTimeoutId) clearTimeout(retryTimeoutId); if (event.code !== 1000 && event.code !== 1001 && event.code !== 1005) { const retryDelay = Math.min(3000 + attemptCount * 1000, 10000); if(statusText) statusText.textContent = `Offline...`; retryTimeoutId = setTimeout(connect, retryDelay); } }; } catch (err) { console.error(`Connect() Error: ${err.message}`); if(statusText) statusText.textContent = 'Connect Error!';} }
-
-        // --- Event Listeners ---
         if (cursorRectangle) { 
             cursorRectangle.addEventListener('pointerdown', (e) => { 
-                triggerHapticFeedback(); // Feedback aptico
-                e.preventDefault(); try { cursorRectangle.setPointerCapture(e.pointerId); } catch(err) {} activeTouches_cursorPad.set(e.pointerId, { clientX: e.clientX, clientY: e.clientY, pointerId: e.pointerId }); isDraggingForCursor_cursorPad = false; if (activeTouches_cursorPad.size === 1) { wasMultiTouching_cursorPad = false; pointerDownTime_cursorPad = Date.now(); pointerDownPosition_cursorPad = { x: e.clientX, y: e.clientY }; cursorRectangle.appendChild(virtualCursor1); const rect = cursorRectangle.getBoundingClientRect(); virtualCursor1.style.left = `${e.clientX - rect.left}px`; virtualCursor1.style.top = `${e.clientY - rect.top}px`; virtualCursor1.style.display = 'block'; virtualCursor2.style.display = 'none'; if(cursorRectangleText) cursorRectangleText.style.opacity = '0'; sendToSocket({ type: 'pointerdown', x: (e.clientX - rect.left) / rect.width, y: (e.clientY - rect.top) / rect.height }); lastMoveSentTime_cursorPad = Date.now(); } else if (activeTouches_cursorPad.size >= 2) { wasMultiTouching_cursorPad = true; virtualCursor1.style.display = 'none'; virtualCursor2.style.display = 'none'; lastPanCentroid_cursorPad = getCentroid(activeTouches_cursorPad); lastGestureSentTime_cursorPad = Date.now(); sendToSocket({ type: 'pointerup' }); }}, { passive: false });
-            cursorRectangle.addEventListener('pointermove', (e) => { if (!activeTouches_cursorPad.has(e.pointerId)) return; e.preventDefault(); activeTouches_cursorPad.set(e.pointerId, { clientX: e.clientX, clientY: e.clientY, pointerId: e.pointerId }); const now = Date.now(); if (activeTouches_cursorPad.size === 1 && !wasMultiTouching_cursorPad) { const distMoved = Math.sqrt(Math.pow(e.clientX - pointerDownPosition_cursorPad.x, 2) + Math.pow(e.clientY - pointerDownPosition_cursorPad.y, 2)); if (distMoved > TAP_MOVE_THRESHOLD_cursorPad / 3) isDraggingForCursor_cursorPad = true; if (isDraggingForCursor_cursorPad) { const rect = cursorRectangle.getBoundingClientRect(); const normX = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width)); const normY = Math.max(0, Math.min(1, (e.clientY - rect.top) / rect.height)); virtualCursor1.style.left = `${normX * rect.width}px`; virtualCursor1.style.top = `${normY * rect.height}px`; latestMoveData_cursorPad = { type: 'pointermove', x: normX, y: normY }; } } else if (activeTouches_cursorPad.size >= 2 && wasMultiTouching_cursorPad) {  const currentCentroid = getCentroid(activeTouches_cursorPad); if (lastPanCentroid_cursorPad && (now - lastGestureSentTime_cursorPad > GESTURE_THROTTLE_INTERVAL_cursorPad)) {  const dx = currentCentroid.x - lastPanCentroid_cursorPad.x; const dy = currentCentroid.y - lastPanCentroid_cursorPad.y; if (Math.abs(dx) > PAN_SENSITIVITY_THRESHOLD_cursorPad || Math.abs(dy) > PAN_SENSITIVITY_THRESHOLD_cursorPad) { sendToSocket({ type: 'cameraCommand', command: 'pan', dx: dx, dy: dy }); lastGestureSentTime_cursorPad = now; } } lastPanCentroid_cursorPad = currentCentroid; }}, { passive: false });
-            const handlePointerEndOrCancelCursorPad = (e) => { e.preventDefault(); const pointerId = e.pointerId; if (!activeTouches_cursorPad.has(pointerId)) return; const wasDragging = isDraggingForCursor_cursorPad; const wasMulti = wasMultiTouching_cursorPad; activeTouches_cursorPad.delete(pointerId); try { cursorRectangle.releasePointerCapture(pointerId); } catch (err) {} if (activeTouches_cursorPad.size === 0) { virtualCursor1.style.display = 'none'; virtualCursor2.style.display = 'none'; if(cursorRectangleText) cursorRectangleText.style.opacity = '0.9'; if (!wasMulti) { const timeHeld = Date.now() - pointerDownTime_cursorPad; const distMoved = Math.sqrt(Math.pow(e.clientX - pointerDownPosition_cursorPad.x, 2) + Math.pow(e.clientY - pointerDownPosition_cursorPad.y, 2)); if (!wasDragging && timeHeld < TAP_TIME_THRESHOLD_cursorPad && distMoved < TAP_MOVE_THRESHOLD_cursorPad) { triggerHapticFeedback(20); const rect = cursorRectangle.getBoundingClientRect(); sendToSocket({ type: 'click', x: (e.clientX - rect.left) / rect.width, y: (e.clientY - rect.top) / rect.height }); } else { sendToSocket({ type: 'pointerup' }); } } else { sendToSocket({ type: 'pointerup' });} isDraggingForCursor_cursorPad = false; wasMultiTouching_cursorPad = false; lastPanCentroid_cursorPad = null; latestMoveData_cursorPad = null; } else if (activeTouches_cursorPad.size === 1 && wasMulti) { wasMultiTouching_cursorPad = false; isDraggingForCursor_cursorPad = false; const remainingTouch = activeTouches_cursorPad.values().next().value; if (remainingTouch) { pointerDownTime_cursorPad = Date.now(); pointerDownPosition_cursorPad = { x: remainingTouch.clientX, y: remainingTouch.clientY }; cursorRectangle.appendChild(virtualCursor1); const rect = cursorRectangle.getBoundingClientRect(); virtualCursor1.style.left = `${remainingTouch.clientX - rect.left}px`; virtualCursor1.style.top = `${remainingTouch.clientY - rect.top}px`; virtualCursor1.style.display = 'block'; if(cursorRectangleText) cursorRectangleText.style.opacity = '0'; sendToSocket({ type: 'pointerdown', x: (remainingTouch.clientX - rect.left) / rect.width, y: (remainingTouch.clientY - rect.top) / rect.height }); lastMoveSentTime_cursorPad = Date.now(); } } else if (activeTouches_cursorPad.size >= 2) { lastPanCentroid_cursorPad = getCentroid(activeTouches_cursorPad); lastGestureSentTime_cursorPad = Date.now(); }};
+                triggerHapticFeedback();
+                e.preventDefault(); try { cursorRectangle.setPointerCapture(e.pointerId); } catch(err) {}
+                activeTouches_cursorPad.set(e.pointerId, { clientX: e.clientX, clientY: e.clientY, pointerId: e.pointerId });
+                isDraggingForCursor_cursorPad = false;
+                if (activeTouches_cursorPad.size === 1) {
+                    pointerDownTime_cursorPad = Date.now();
+                    pointerDownPosition_cursorPad = { x: e.clientX, y: e.clientY };
+                    cursorRectangle.appendChild(virtualCursor1);
+                    const rect = cursorRectangle.getBoundingClientRect();
+                    virtualCursor1.style.left = `${e.clientX - rect.left}px`;
+                    virtualCursor1.style.top = `${e.clientY - rect.top}px`;
+                    virtualCursor1.style.display = 'block';
+                    virtualCursor2.style.display = 'none';
+                    if(cursorRectangleText) cursorRectangleText.style.opacity = '0';
+                    sendToSocket({ type: 'pointerdown', x: (e.clientX - rect.left) / rect.width, y: (e.clientY - rect.top) / rect.height });
+                } else if (activeTouches_cursorPad.size >= 2) {
+                    virtualCursor1.style.display = 'none';
+                    virtualCursor2.style.display = 'none';
+                    sendToSocket({ type: 'pointerup' }); 
+                }
+            }, { passive: false });
+
+            cursorRectangle.addEventListener('pointermove', (e) => {
+                if (!activeTouches_cursorPad.has(e.pointerId)) return;
+                e.preventDefault();
+                activeTouches_cursorPad.set(e.pointerId, { clientX: e.clientX, clientY: e.clientY, pointerId: e.pointerId });
+                if (activeTouches_cursorPad.size === 1) {
+                    const distMoved = Math.sqrt(Math.pow(e.clientX - pointerDownPosition_cursorPad.x, 2) + Math.pow(e.clientY - pointerDownPosition_cursorPad.y, 2));
+                    if (distMoved > TAP_MOVE_THRESHOLD_cursorPad / 3) isDraggingForCursor_cursorPad = true;
+                    const rect = cursorRectangle.getBoundingClientRect();
+                    const normX = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+                    const normY = Math.max(0, Math.min(1, (e.clientY - rect.top) / rect.height));
+                    virtualCursor1.style.left = `${normX * rect.width}px`;
+                    virtualCursor1.style.top = `${normY * rect.height}px`;
+                    sendToSocket({ type: 'pointermove', x: normX, y: normY });
+                }
+            }, { passive: false });
+
+            const handlePointerEndOrCancelCursorPad = (e) => {
+                e.preventDefault();
+                if (!activeTouches_cursorPad.has(e.pointerId)) return;
+                activeTouches_cursorPad.delete(e.pointerId);
+                try { cursorRectangle.releasePointerCapture(e.pointerId); } catch (err) {}
+                if (activeTouches_cursorPad.size === 0) {
+                    virtualCursor1.style.display = 'none';
+                    virtualCursor2.style.display = 'none';
+                    if(cursorRectangleText) cursorRectangleText.style.opacity = '0.9';
+                    const timeHeld = Date.now() - pointerDownTime_cursorPad;
+                    const distMoved = Math.sqrt(Math.pow(e.clientX - pointerDownPosition_cursorPad.x, 2) + Math.pow(e.clientY - pointerDownPosition_cursorPad.y, 2));
+                    if (!isDraggingForCursor_cursorPad && timeHeld < TAP_TIME_THRESHOLD_cursorPad && distMoved < TAP_MOVE_THRESHOLD_cursorPad) {
+                        triggerHapticFeedback(20);
+                        sendToSocket({ type: 'click' });
+                    }
+                    sendToSocket({ type: 'pointerup' });
+                    isDraggingForCursor_cursorPad = false;
+                }
+            };
             cursorRectangle.addEventListener('pointerup', handlePointerEndOrCancelCursorPad);
             cursorRectangle.addEventListener('pointercancel', handlePointerEndOrCancelCursorPad);
         }
 
         if (sphereTouchTarget) { 
             sphereTouchTarget.addEventListener('pointerdown', (e) => { 
-                triggerHapticFeedback(); // Feedback aptico
-                e.preventDefault(); sphereTouchTarget.setPointerCapture(e.pointerId); nav_activeTouches.set(e.pointerId, { id: e.pointerId, clientX: e.clientX, clientY: e.clientY }); nav_pointerDownOnPad = true; nav_pointerDownTime_sphere = Date.now(); nav_pointerDownStartPos_sphere = { x: e.clientX, y: e.clientY }; if (sphereTouchTargetText) sphereTouchTargetText.style.opacity = '0'; const touchesArray = Array.from(nav_activeTouches.values()); const rect = sphereTouchTarget.getBoundingClientRect(); if (nav_activeTouches.size === 1) { nav_isOrbiting = true; nav_isMultiTouching = false; nav_lastOrbitPos = { x: e.clientX, y: e.clientY }; sphereTouchTarget.appendChild(virtualCursor1); const pos = clampToCircle(e.clientX - rect.left, e.clientY - rect.top, sphereTouchTarget); virtualCursor1.style.left = `${pos.x}px`; virtualCursor1.style.top = `${pos.y}px`; virtualCursor1.style.display = 'block'; virtualCursor2.style.display = 'none'; } else if (nav_activeTouches.size >= 2) { nav_isOrbiting = false; nav_isMultiTouching = true; nav_touch1_navPad = touchesArray[0]; nav_touch2_navPad = touchesArray[1]; sphereTouchTarget.appendChild(virtualCursor1); sphereTouchTarget.appendChild(virtualCursor2); const pos1 = clampToCircle(nav_touch1_navPad.clientX - rect.left, nav_touch1_navPad.clientY - rect.top, sphereTouchTarget); const pos2 = clampToCircle(nav_touch2_navPad.clientX - rect.left, nav_touch2_navPad.clientY - rect.top, sphereTouchTarget); virtualCursor1.style.left = `${pos1.x}px`; virtualCursor1.style.top = `${pos1.y}px`; virtualCursor2.style.left = `${pos2.x}px`; virtualCursor2.style.top = `${pos2.y}px`; virtualCursor1.style.display = 'block'; virtualCursor2.style.display = 'block'; if (nav_touch1_navPad && nav_touch2_navPad) { nav_lastPinchDist = calculateDistance(nav_touch1_navPad, nav_touch2_navPad); } else { nav_isMultiTouching = false; } nav_lastCentroid_navPad = getCentroid(nav_activeTouches); } nav_lastGestureSentTime = 0; });
-            sphereTouchTarget.addEventListener('pointermove', (e) => { if (!nav_activeTouches.has(e.pointerId) || !nav_pointerDownOnPad) return; e.preventDefault(); nav_activeTouches.set(e.pointerId, { id: e.pointerId, clientX: e.clientX, clientY: e.clientY }); const now = Date.now(); if (now - nav_lastGestureSentTime < NAV_GESTURE_THROTTLE && nav_lastGestureSentTime !== 0) return; let gestureSentThisFrame = false; const distMovedFromStart = calculateDistance({clientX: e.clientX, clientY: e.clientY}, nav_pointerDownStartPos_sphere); const rect = sphereTouchTarget.getBoundingClientRect(); if (nav_activeTouches.size === 1 && nav_isOrbiting) { const pos = clampToCircle(e.clientX - rect.left, e.clientY - rect.top, sphereTouchTarget); virtualCursor1.style.left = `${pos.x}px`; virtualCursor1.style.top = `${pos.y}px`; if (distMovedFromStart > NAV_SPHERE_TAP_MOVE_THRESHOLD || (Date.now() - nav_pointerDownTime_sphere > NAV_SPHERE_TAP_TIME_THRESHOLD)) { const dx = e.clientX - nav_lastOrbitPos.x; const dy = e.clientY - nav_lastOrbitPos.y; if (Math.abs(dx) > 0.1 || Math.abs(dy) > 0.1) { sendToSocket({ type: 'cameraCommand', command: 'orbit', dx: dx * NAV_ORBIT_SENSITIVITY_RAW, dy: dy * NAV_ORBIT_SENSITIVITY_RAW }); nav_lastOrbitPos = { x: e.clientX, y: e.clientY }; gestureSentThisFrame = true; } } } else if (nav_activeTouches.size >= 2 && nav_isMultiTouching && nav_touch1_navPad && nav_touch2_navPad) { const currentT1 = nav_activeTouches.get(nav_touch1_navPad.id); const currentT2 = nav_activeTouches.get(nav_touch2_navPad.id); if (!currentT1 || !currentT2) { return; } const pos1 = clampToCircle(currentT1.clientX - rect.left, currentT1.clientY - rect.top, sphereTouchTarget); const pos2 = clampToCircle(currentT2.clientX - rect.left, currentT2.clientY - rect.top, sphereTouchTarget); virtualCursor1.style.left = `${pos1.x}px`; virtualCursor1.style.top = `${pos1.y}px`; virtualCursor2.style.left = `${pos2.x}px`; virtualCursor2.style.top = `${pos2.y}px`; const currentPinchDist = calculateDistance(currentT1, currentT2); const currentCentroid = getCentroid(nav_activeTouches); const pinchDelta = currentPinchDist - nav_lastPinchDist; const panDx = currentCentroid.x - nav_lastCentroid_navPad.x; const panDy = currentCentroid.y - nav_lastCentroid_navPad.y; if (Math.abs(pinchDelta) > NAV_ZOOM_SENSITIVITY_PIXELS) { sendToSocket({ type: 'cameraCommand', command: 'dolly', value: -pinchDelta * NAV_DOLLY_SENSITIVITY_RAW }); gestureSentThisFrame = true; } else if (Math.abs(panDx) > NAV_PAN_SENSITIVITY_PIXELS || Math.abs(panDy) > NAV_PAN_SENSITIVITY_PIXELS) { sendToSocket({ type: 'cameraCommand', command: 'pan', dx: panDx, dy: panDy }); gestureSentThisFrame = true; } nav_lastPinchDist = currentPinchDist; nav_lastCentroid_navPad = currentCentroid; } if(gestureSentThisFrame) nav_lastGestureSentTime = now; });
-            const navPointerEndHandler = (e) => { if (!nav_activeTouches.has(e.pointerId) && e.type !== 'pointerout') return; let wasTap = false; if (nav_activeTouches.has(e.pointerId) && nav_activeTouches.size === 1 && nav_isOrbiting && !nav_isMultiTouching) { const timeHeld = Date.now() - nav_pointerDownTime_sphere; const distMoved = calculateDistance({clientX: e.clientX, clientY: e.clientY}, nav_pointerDownStartPos_sphere); if (timeHeld < NAV_SPHERE_TAP_TIME_THRESHOLD && distMoved < NAV_SPHERE_TAP_MOVE_THRESHOLD) { triggerHapticFeedback(20); currentLayoutSphereIndex = (currentLayoutSphereIndex + 1) % availableLayouts.length; const newLayout = availableLayouts[currentLayoutSphereIndex]; sendToSocket({ type: 'appCommand', command: 'setLayout', value: newLayout }); console.log(`Layout changed (tap): ${newLayout}`); wasTap = true; } } try { e.preventDefault(); if (nav_activeTouches.has(e.pointerId)) { try { sphereTouchTarget.releasePointerCapture(e.pointerId); } catch(err) {} nav_activeTouches.delete(e.pointerId); } virtualCursor1.style.display = 'none'; virtualCursor2.style.display = 'none'; if(sphereTouchTargetText) sphereTouchTargetText.style.opacity = '0.9'; const touchesArray = Array.from(nav_activeTouches.values()); if (nav_activeTouches.size < 2) { nav_isMultiTouching = false; nav_touch1_navPad = null; nav_touch2_navPad = null;} if (nav_activeTouches.size < 1) { nav_isOrbiting = false; nav_pointerDownOnPad = false;} else if (nav_activeTouches.size === 1) { nav_isOrbiting = true; nav_isMultiTouching = false; const firstTouch = touchesArray[0]; if(firstTouch) { nav_lastOrbitPos = { x: firstTouch.clientX, y: firstTouch.clientY }; nav_pointerDownTime_sphere = Date.now(); nav_pointerDownStartPos_sphere = { x: firstTouch.clientX, y: firstTouch.clientY }; if (sphereTouchTargetText) sphereTouchTargetText.style.opacity = '0'; const rect = sphereTouchTarget.getBoundingClientRect(); sphereTouchTarget.appendChild(virtualCursor1); const pos = clampToCircle(firstTouch.clientX - rect.left, firstTouch.clientY - rect.top, sphereTouchTarget); virtualCursor1.style.left = `${pos.x}px`; virtualCursor1.style.top = `${pos.y}px`; virtualCursor1.style.display = 'block'; } } else if (nav_activeTouches.size >= 2) { if (touchesArray.length >=2) { nav_touch1_navPad = touchesArray[0]; nav_touch2_navPad = touchesArray[1]; nav_lastPinchDist = calculateDistance(nav_touch1_navPad, nav_touch2_navPad); } else { nav_isMultiTouching = false; } nav_lastCentroid_navPad = getCentroid(nav_activeTouches); nav_isOrbiting = false; } } catch (err) { console.error(`NavSphere PEND CATCH ERR: ${err.message}`); }};
+                triggerHapticFeedback();
+                e.preventDefault(); sphereTouchTarget.setPointerCapture(e.pointerId);
+                nav_activeTouches.set(e.pointerId, { id: e.pointerId, clientX: e.clientX, clientY: e.clientY });
+                nav_pointerDownOnPad = true;
+                nav_pointerDownTime_sphere = Date.now();
+                nav_pointerDownStartPos_sphere = { x: e.clientX, y: e.clientY };
+                if (sphereTouchTargetText) sphereTouchTargetText.style.opacity = '0';
+                const touchesArray = Array.from(nav_activeTouches.values());
+                const rect = sphereTouchTarget.getBoundingClientRect();
+
+                if (nav_activeTouches.size === 1) {
+                    nav_isOrbiting = true;
+                    nav_isMultiTouching = false;
+                    nav_lastOrbitPos = { x: e.clientX, y: e.clientY };
+                    sphereTouchTarget.appendChild(virtualCursor1);
+                    const pos = clampToCircle(e.clientX - rect.left, e.clientY - rect.top, sphereTouchTarget);
+                    virtualCursor1.style.left = `${pos.x}px`;
+                    virtualCursor1.style.top = `${pos.y}px`;
+                    virtualCursor1.style.display = 'block';
+                    virtualCursor2.style.display = 'none';
+                } else if (nav_activeTouches.size >= 2) {
+                    nav_isOrbiting = false;
+                    nav_isMultiTouching = true;
+                    nav_touch1_navPad = touchesArray[0];
+                    nav_touch2_navPad = touchesArray[1];
+                    sphereTouchTarget.appendChild(virtualCursor1);
+                    sphereTouchTarget.appendChild(virtualCursor2);
+                    const pos1 = clampToCircle(nav_touch1_navPad.clientX - rect.left, nav_touch1_navPad.clientY - rect.top, sphereTouchTarget);
+                    const pos2 = clampToCircle(nav_touch2_navPad.clientX - rect.left, nav_touch2_navPad.clientY - rect.top, sphereTouchTarget);
+                    virtualCursor1.style.left = `${pos1.x}px`; virtualCursor1.style.top = `${pos1.y}px`;
+                    virtualCursor2.style.left = `${pos2.x}px`; virtualCursor2.style.top = `${pos2.y}px`;
+                    virtualCursor1.style.display = 'block'; virtualCursor2.style.display = 'block';
+                    if (nav_touch1_navPad && nav_touch2_navPad) {
+                        nav_lastPinchDist = calculateDistance(nav_touch1_navPad, nav_touch2_navPad);
+                    }
+                    nav_lastCentroid_navPad = getCentroid(nav_activeTouches);
+                }
+            });
+
+            sphereTouchTarget.addEventListener('pointermove', (e) => {
+                if (!nav_activeTouches.has(e.pointerId) || !nav_pointerDownOnPad) return;
+                e.preventDefault();
+                nav_activeTouches.set(e.pointerId, { id: e.pointerId, clientX: e.clientX, clientY: e.clientY });
+                const rect = sphereTouchTarget.getBoundingClientRect();
+
+                if (nav_activeTouches.size === 1 && nav_isOrbiting) {
+                    const pos = clampToCircle(e.clientX - rect.left, e.clientY - rect.top, sphereTouchTarget);
+                    virtualCursor1.style.left = `${pos.x}px`; virtualCursor1.style.top = `${pos.y}px`;
+                    const dx = e.clientX - nav_lastOrbitPos.x;
+                    const dy = e.clientY - nav_lastOrbitPos.y;
+                    if (Math.abs(dx) > 0.1 || Math.abs(dy) > 0.1) {
+                        sendToSocket({ type: 'cameraCommand', command: 'orbit', dx: dx * NAV_ORBIT_SENSITIVITY_RAW, dy: dy * NAV_ORBIT_SENSITIVITY_RAW });
+                        nav_lastOrbitPos = { x: e.clientX, y: e.clientY };
+                    }
+                } else if (nav_activeTouches.size >= 2 && nav_isMultiTouching) {
+                    const currentT1 = nav_activeTouches.get(nav_touch1_navPad.id);
+                    const currentT2 = nav_activeTouches.get(nav_touch2_navPad.id);
+                    if (!currentT1 || !currentT2) return;
+                    
+                    const pos1 = clampToCircle(currentT1.clientX - rect.left, currentT1.clientY - rect.top, sphereTouchTarget);
+                    const pos2 = clampToCircle(currentT2.clientX - rect.left, currentT2.clientY - rect.top, sphereTouchTarget);
+                    virtualCursor1.style.left = `${pos1.x}px`; virtualCursor1.style.top = `${pos1.y}px`;
+                    virtualCursor2.style.left = `${pos2.x}px`; virtualCursor2.style.top = `${pos2.y}px`;
+
+                    const currentPinchDist = calculateDistance(currentT1, currentT2);
+                    const currentCentroid = getCentroid(nav_activeTouches);
+                    const pinchDelta = currentPinchDist - nav_lastPinchDist;
+                    const panDx = currentCentroid.x - nav_lastCentroid_navPad.x;
+                    const panDy = currentCentroid.y - nav_lastCentroid_navPad.y;
+
+                    if (Math.abs(pinchDelta) > NAV_ZOOM_SENSITIVITY_PIXELS) {
+                        sendToSocket({ type: 'cameraCommand', command: 'dolly', value: -pinchDelta * NAV_DOLLY_SENSITIVITY_RAW });
+                    } else if (Math.abs(panDx) > NAV_PAN_SENSITIVITY_PIXELS || Math.abs(panDy) > NAV_PAN_SENSITIVITY_PIXELS) {
+                        sendToSocket({ type: 'cameraCommand', command: 'pan', dx: panDx, dy: panDy });
+                    }
+                    nav_lastPinchDist = currentPinchDist;
+                    nav_lastCentroid_navPad = currentCentroid;
+                }
+            });
+
+            const navPointerEndHandler = (e) => {
+                if (!nav_activeTouches.has(e.pointerId) && e.type !== 'pointerout') return;
+                
+                if (nav_activeTouches.has(e.pointerId) && nav_activeTouches.size === 1) {
+                    const timeHeld = Date.now() - nav_pointerDownTime_sphere;
+                    const distMoved = calculateDistance({clientX: e.clientX, clientY: e.clientY}, nav_pointerDownStartPos_sphere);
+                    if (timeHeld < NAV_SPHERE_TAP_TIME_THRESHOLD && distMoved < NAV_SPHERE_TAP_MOVE_THRESHOLD) {
+                        triggerHapticFeedback(20);
+                        currentLayoutSphereIndex = (currentLayoutSphereIndex + 1) % availableLayouts.length;
+                        sendToSocket({ type: 'appCommand', command: 'setLayout', value: availableLayouts[currentLayoutSphereIndex] });
+                    }
+                }
+                
+                if (nav_activeTouches.has(e.pointerId)) {
+                    try { sphereTouchTarget.releasePointerCapture(e.pointerId); } catch(err) {}
+                    nav_activeTouches.delete(e.pointerId);
+                }
+
+                virtualCursor1.style.display = 'none';
+                virtualCursor2.style.display = 'none';
+                if(sphereTouchTargetText) sphereTouchTargetText.style.opacity = '0.9';
+
+                const touchesArray = Array.from(nav_activeTouches.values());
+                if (touchesArray.length < 2) nav_isMultiTouching = false;
+                if (touchesArray.length < 1) nav_isOrbiting = false;
+            };
             sphereTouchTarget.addEventListener('pointerup', navPointerEndHandler);
             sphereTouchTarget.addEventListener('pointercancel', navPointerEndHandler);
-            sphereTouchTarget.addEventListener('pointerout', (e) => { if (nav_activeTouches.has(e.pointerId) && (!e.buttons || e.buttons === 0) ) { navPointerEndHandler(e);}});
+            sphereTouchTarget.addEventListener('pointerout', (e) => {
+                if (nav_activeTouches.has(e.pointerId) && (!e.buttons || e.buttons === 0) ) {
+                    navPointerEndHandler(e);
+                }
+            });
         }
         
-        // --- Correzione altezza per iOS e avvio ---
+        function toggleFullScreen() {
+             if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => console.log(err.message));
+             } else {
+                document.exitFullscreen();
+             }
+        }
+
+        if (fullscreenButton) { 
+            fullscreenButton.addEventListener('click', toggleFullScreen);
+            fullscreenButton.addEventListener('pointerdown', () => triggerHapticFeedback(10));
+        }
+
         const setAppHeight = () => { document.documentElement.style.setProperty('--app-height', `${window.innerHeight}px`); };
         window.addEventListener('resize', setAppHeight);
         window.addEventListener('orientationchange', setAppHeight);
         setAppHeight();
 
-        // Nasconde il pulsante fullscreen su iOS
         const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
         if (isIOS && fullscreenButton) { fullscreenButton.style.display = 'none'; }
-
-        // Initial Connection & Interval Timer
-        if (!WS_HOST || WS_HOST.trim() === '' || WS_HOST === 'YOUR_COMPUTER_LAN_IP_ADDRESS_HERE') { console.warn("ATTENTION: Set WS_HOST in the HTML with your computer's LAN IP!"); if(statusText) statusText.textContent = "IP Config Error!";}
-        connect();
-        setInterval(() => { if (activeTouches_cursorPad.size === 1 && !wasMultiTouching_cursorPad && isDraggingForCursor_cursorPad && latestMoveData_cursorPad) { if (socket && socket.readyState === WebSocket.OPEN) { sendToSocket(latestMoveData_cursorPad); latestMoveData_cursorPad = null; } } if (socket && socket.readyState === WebSocket.OPEN && commandQueue.length > 0) { processCommandQueue(); }}, MOVE_THROTTLE_INTERVAL_cursorPad);
-
-        // Prevent scrolling & context menu
+        
         document.addEventListener('touchmove', function(event) { event.preventDefault(); }, { passive: false });
         window.addEventListener('contextmenu', function(e) { e.preventDefault(); });
-
-        // --- AGGIUNTA: Funzione per tenere sveglio il server ---
-setInterval(() => {
-  // Controlla se il socket è connesso
-  if (socket && socket.readyState === WebSocket.OPEN) {
-    // Invia un messaggio di tipo 'ping'. Il nostro server non farà nulla con questo
-    // messaggio, ma il solo fatto di riceverlo resetta il timer di inattività di Render.
-    sendToSocket({ type: 'ping' });
-    console.log('Ping inviato per mantenere il server attivo.');
-  }
-}, 10 * 60 * 1000); // Esegui ogni 10 minuti
     </script>
 </body>
 </html>

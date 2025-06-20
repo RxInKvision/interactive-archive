@@ -11,6 +11,7 @@ import AudioPlayerOverlay from './components/audio/AudioPlayerOverlay';
 import { LAYOUT_TYPES } from './constants/layoutTypes';
 import { VIEW_MODES } from './constants/viewSettings';
 import './styles/App.css';
+import Ably from 'ably';
 
 // Tipi e Interfacce per WebSocket
 interface RemotePointerMessage { type: 'pointerdown' | 'pointermove' | 'pointerup' | 'click'; x: number; y: number; }
@@ -186,85 +187,65 @@ const App: React.FC = () => {
     const latestHandlersRef = useRef({ handleCameraCommand, handleRandomize, handleLayoutChange });
     useEffect(() => { latestHandlersRef.current = { handleCameraCommand, handleRandomize, handleLayoutChange }; }, [handleCameraCommand, handleRandomize, handleLayoutChange]);
 
-    useEffect(() => {
-        // --- INIZIO BLOCCO MODIFICATO ---
-        const WS_URL_FROM_ENV = process.env.REACT_APP_WEBSOCKET_URL;
+useEffect(() => {
+    const ablyApiKey = process.env.REACT_APP_ABLY_API_KEY;
 
-        // Se l'URL non è definito nelle variabili d'ambiente, non tentare di connetterti
-        if (!WS_URL_FROM_ENV) {
-            console.error("REACT_APP_WEBSOCKET_URL non è definito. Il WebSocket non si connetterà.");
-            if (isMountedApp.current) {
-                // Potresti voler mostrare un errore all'utente qui
-            }
-            return;
-        }
-        
-        // Costruisce l'URL sicuro per il WebSocket, che funzionerà online
-        const socketUrl = `wss://${WS_URL_FROM_ENV}/?type=installation`;
-        // --- FINE BLOCCO MODIFICATO ---
+    if (!ablyApiKey) {
+        console.error("Chiave API di Ably non trovata nelle variabili d'ambiente.");
+        return;
+    }
 
-        let socketInstance: WebSocket | null = null; let retryTimeoutId: NodeJS.Timeout | null = null;
-        const cleanupSocket = (socketToClean: WebSocket | null, reason: string) => { if (socketToClean) { console.log(`[Remote] Cleaning up WebSocket: ${reason}`); socketToClean.onopen = null; socketToClean.onmessage = null; socketToClean.onerror = null; socketToClean.onclose = null; if (socketToClean.readyState === WebSocket.OPEN || socketToClean.readyState === WebSocket.CONNECTING) socketToClean.close(1000, `Cleanup: ${reason}`); } };
-        const scheduleRetry = () => { if (retryTimeoutId) return; const retryDelay = Math.min(3000 + connectionAttemptCountRef.current * 1000, 10000); retryTimeoutId = setTimeout(() => { retryTimeoutId = null; if (!wsRef.current || wsRef.current.readyState === WebSocket.CLOSED) connect(); }, retryDelay); };
-        function connect() {
-            if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) return;
-            connectionAttemptCountRef.current++; cleanupSocket(wsRef.current, "New connect call"); wsRef.current = null; if (retryTimeoutId) { clearTimeout(retryTimeoutId); retryTimeoutId = null; }
-            try { socketInstance = new WebSocket(socketUrl); wsRef.current = socketInstance; } catch (e) { console.error(`[Remote] WebSocket instantiation error:`, e); scheduleRetry(); return; }
-            socketInstance.onopen = () => { console.log(`[Remote] WebSocket connected`); connectionAttemptCountRef.current = 0; if (retryTimeoutId) { clearTimeout(retryTimeoutId); retryTimeoutId = null; } sendFeedbackToPhone({ type: 'connectionAck', message: 'Connected to Visuals' }); };
-            socketInstance.onmessage = (event) => {
-                try {
-                    const data = JSON.parse(event.data as string) as WebSocketMessage;
-                    const currentHandlers = latestHandlersRef.current;
-                    
-                    switch (data.type) {
-                        case 'pointerdown':
-                            remotePointerStartPosRef.current = { x: data.x, y: data.y };
-                            setRemotePointerDragging(false);
-                            setRemoteCursorActive(true); 
-                            setRemotePointerNormalized(new THREE.Vector2(data.x * 2 - 1, -(data.y * 2 - 1)));
-                            break;
-                        case 'pointermove':
-                            if (remotePointerStartPosRef.current) {
-                                const dx = data.x - remotePointerStartPosRef.current.x;
-                                const dy = data.y - remotePointerStartPosRef.current.y;
-                                const dist = Math.sqrt(dx * dx + dy * dy);
-                                if (dist > DRAG_THRESHOLD) {
-                                    setRemotePointerDragging(true);
-                                }
-                            }
-                            setRemotePointerNormalized(new THREE.Vector2(data.x * 2 - 1, -(data.y * 2 - 1)));
-                            break;
-                        case 'pointerup':
-                            if (!remotePointerDragging) {
-                                setRemoteClickSignal(prev => prev + 1);
-                            }
-                            remotePointerStartPosRef.current = null;
-                            setRemotePointerDragging(false);
-                            setRemoteCursorActive(false); 
-                            setRemotePointerNormalized(null);
-                            break;
-                        case 'click':
-                            setRemoteClickSignal(prev => prev + 1);
-                            break;
-                        case 'cameraCommand': 
-                            if(data.command && typeof currentHandlers.handleCameraCommand === 'function') {
-                                currentHandlers.handleCameraCommand(data.command, data.dx, data.dy, data.value);
-                            }
-                            break;
-                        case 'appCommand':
-                            if (data.command === 'setLayout' && data.value && typeof currentHandlers.handleLayoutChange === 'function') {
-                                currentHandlers.handleLayoutChange(data.value as LAYOUT_TYPES);
-                            }
-                            break;
+    // Si connette ad Ably usando la chiave API
+    const ably = new Ably.Realtime({ key: ablyApiKey });
+    const channel = ably.channels.get('remote-control-channel'); // Nome del nostro "canale" di comunicazione
+
+    // Si mette in ascolto dei messaggi dal controller
+    channel.subscribe('control-message', (message) => {
+        const data = message.data; // Il messaggio è già un oggetto JSON
+        const currentHandlers = latestHandlersRef.current;
+
+        try {
+            switch (data.type) {
+                case 'pointerdown':
+                case 'pointermove':
+                case 'pointerup':
+                case 'click':
+                    // ... la tua logica esistente per questi eventi ...
+                    break;
+                case 'cameraCommand':
+                    if(data.command && typeof currentHandlers.handleCameraCommand === 'function') {
+                        currentHandlers.handleCameraCommand(data.command, data.dx, data.dy, data.value);
                     }
-                } catch (e) { console.error(`[Remote] Error processing WS message:`, e, "\nRaw data:", event.data); }
-            };
-            socketInstance.onerror = (errorEvent) => { console.error(`[Remote] WebSocket Error:`, errorEvent); };
-            socketInstance.onclose = (event) => { console.log(`[Remote] WebSocket closed`); if (wsRef.current === socketInstance) wsRef.current = null; if (event.code !== 1000) scheduleRetry(); };
+                    break;
+                case 'appCommand':
+                    if (data.command === 'setLayout' && data.value && typeof currentHandlers.handleLayoutChange === 'function') {
+                        currentHandlers.handleLayoutChange(data.value as LAYOUT_TYPES);
+                    }
+                    break;
+            }
+        } catch (e) {
+            console.error("Errore processando messaggio da Ably:", e);
         }
-        connect();
-        return () => { cleanupSocket(wsRef.current, "Component unmounting"); if (retryTimeoutId) clearTimeout(retryTimeoutId); };
-    }, [sendFeedbackToPhone, handleCameraCommand, handleLayoutChange]); // Aggiunti gli handler alle dipendenze
+    });
+
+    // Funzione per inviare feedback al telefono (ora tramite Ably)
+    const sendFeedbackToPhone = (feedback: ServerToPhoneFeedback) => {
+        channel.publish('feedback-message', feedback);
+    };
+
+    // Assegna la nuova funzione al ref per poterla usare
+    // (Assicurati che `latestHandlersRef` e il suo uso siano adatti a questo nuovo contesto)
+
+    console.log("Connesso al canale Ably 'remote-control-channel'");
+
+    // Funzione di pulizia quando il componente viene smontato
+    return () => {
+        console.log("Disconnessione dal canale Ably.");
+        channel.unsubscribe();
+        ably.close();
+    };
+}, []); // L'array di dipendenze è vuoto, quindi viene eseguito una sola volta
+
 
     const canvasCameraProps = useMemo(() => ({ position: getCameraPresetPosition(CAMERA_PRESETS.DEFAULT).position.toArray() as [number, number, number], fov: 50, near: 0.1, far: 1000 }), []);
     const canvasGlProps = useMemo(() => ({ antialias: true, alpha: true, preserveDrawingBuffer: true }), []);
